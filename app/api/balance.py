@@ -12,8 +12,23 @@ async def get_user_balance(user_id: int, db: Session = Depends(db.get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    wallet = user.wallet
+    wallet = db.query(DBWallet).filter(DBWallet.user_id == user_id).first()
     if not wallet:
         return {"message": "No transactions"}
     
     return {"balance": wallet.balance}
+
+@router.get("/api/balance/users")
+async def get_users_balance(db: Session = Depends(db.get_db)):
+    users = db.query(DBUser).all()
+    if not users:
+        raise HTTPException(status_code=404, detail="Usuarios no encontrados")
+    
+    users_balance = []
+    for user in users:
+        wallet = db.query(DBWallet).filter(DBWallet.user_id == user.id).first()
+        if not wallet:
+            continue
+        users_balance.append({"user_id": user.id, "balance": wallet.balance})
+    
+    return {"users_balance": users_balance}

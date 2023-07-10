@@ -16,7 +16,7 @@ def get_user_data_from_external_api(user_id: int) -> dict:
     response = requests.get(url)
 
     user_data = {
-        "ext_id": response.json()["id"],
+        "user_id": response.json()["id"],
         "name": response.json()["name"],
         "username": response.json()["username"],
         "email": response.json()["email"],

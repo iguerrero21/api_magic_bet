@@ -16,7 +16,7 @@ class User(Base):
 # Pydantic model
 class User(BaseModel):
     id: int
-    ext_id: int
+    user_id: int
     name: str
     username: str
     email: str

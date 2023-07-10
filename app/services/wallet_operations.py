@@ -13,13 +13,13 @@ def perform_wallet_operation(user_id: int, transaction_amount: float, action: st
 
 
     # Verificar la existencia del usuario en la base de datos
-    user = db.query(DBUser).filter(DBUser.ext_id == user_id).first()
+    user = db.query(DBUser).filter(DBUser.user_id == user_id).first()
     if not user:
         # Obtener los datos del usuario desde la API externa
         user_data = api_client.get_user_data_from_external_api(user_id)
 
-        # Crear un nuevo objeto de usuario en la base de datos
-        user = DBUser(ext_id=user_data["ext_id"], name=user_data["name"], username=user_data["username"], email=user_data["email"])
+        # Crear un nuevo usuario en la base de datos
+        user = DBUser(user_id=user_data.user_id, name=user_data.name, username=user_data.username, email=user_data.email)
         db.add(user)
         db.commit()
 
