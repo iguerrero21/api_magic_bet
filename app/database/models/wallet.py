@@ -4,10 +4,10 @@ from app.database.db import Base
 
 
 class Wallet(Base):
-    __tablename__ = 'wallets'
+    __tablename__ = "wallets"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.user_id'), unique=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), unique=True, index=True)
     balance = Column(Float)
     frozen_balance = Column(Float, default=0)
 

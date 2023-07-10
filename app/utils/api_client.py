@@ -1,7 +1,6 @@
 import requests
 
 
-
 def verify_user_existence(user_id: int) -> bool:
     url = f"https://jsonplaceholder.typicode.com/users/{user_id}"
     response = requests.get(url)

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-'''
+"""
 class User(Base):
     __tablename__ = 'users'
 
@@ -11,7 +11,8 @@ class User(Base):
 
     wallet = relationship("Wallet", back_populates="user")
     transactions = relationship("Transaction", back_populates="user")
-'''
+"""
+
 
 # Pydantic model
 class User(BaseModel):
@@ -23,4 +24,3 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
-    

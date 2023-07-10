@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-'''
+"""
 class Wallet(Base):
     __tablename__ = 'wallets'
 
@@ -11,7 +11,8 @@ class Wallet(Base):
 
     user = relationship("User", back_populates="wallet")
     transactions = relationship("Transaction", back_populates="wallet")
-'''
+"""
+
 
 # Pydantic model
 class Wallet(BaseModel):

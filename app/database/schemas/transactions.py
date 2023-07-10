@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-'''
+"""
 class Transaction(Base):
     __tablename__ = 'transactions'
 
@@ -15,7 +15,8 @@ class Transaction(Base):
 
     user = relationship("User", back_populates="transactions")
     wallet = relationship("Wallet", back_populates="transactions")
-'''
+"""
+
 
 # Pydantic models
 class Transaction(BaseModel):
@@ -33,8 +34,10 @@ class Transaction(BaseModel):
 class CreditTransaction(BaseModel):
     amount: float
 
+
 class DebitTransaction(BaseModel):
     amount: float
+
 
 class WithdrawTransaction(BaseModel):
     amount: float
