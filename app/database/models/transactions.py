@@ -8,8 +8,8 @@ class Transaction(Base):
     __tablename__ = 'transactions'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    wallet_id = Column(Integer, ForeignKey('wallets.id'))
+    user_id = Column(Integer, ForeignKey('users.user_id'), index=True)
+    wallet_id = Column(Integer, ForeignKey('wallets.user_id'), index=True)
     action = Column(String)
     amount = Column(Float)
     description = Column(String)

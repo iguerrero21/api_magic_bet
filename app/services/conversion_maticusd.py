@@ -6,7 +6,7 @@ def get_conversion_rate():
     
     if response.status_code == 200:
         data = response.json()
-        price = data["result"]["price"]
+        price: float = data["result"]["price"]
         return price
     else:
         return None

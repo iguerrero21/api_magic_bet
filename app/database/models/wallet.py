@@ -7,7 +7,7 @@ class Wallet(Base):
     __tablename__ = 'wallets'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.user_id'), unique=True, index=True)
     balance = Column(Float)
     frozen_balance = Column(Float, default=0)
 

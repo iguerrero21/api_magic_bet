@@ -1,17 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.database.schemas.transactions import Transaction
+from app.database.schemas.transactions import WithdrawTransaction
 from app.database.models.user import User as DBUser
 from app.database.models.wallet import Wallet as DBWallet
 from app.database.models.transactions import Transaction as DBTransaction
 from app.database import db
 from sqlalchemy.orm import Session
-from app.services.conversion_maticusd import convert_to_usd
+from app.services.conversion_maticusd import convert_to_usd, get_conversion_rate
 
 router = APIRouter()
 
 @router.post("/api/withdraw/{user_id}")
-async def withdraw_funds(user_id: int, transaction: Transaction, db: Session = Depends(db.get_db)):
-    user = db.query(DBUser).filter(DBUser.id == user_id).first()
+async def withdraw_funds(user_id: int, transaction: WithdrawTransaction, db: Session = Depends(db.get_db)):
+    user = db.query(DBUser).filter(DBUser.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
@@ -19,16 +19,16 @@ async def withdraw_funds(user_id: int, transaction: Transaction, db: Session = D
     if not wallet:
         raise HTTPException(status_code=400, detail="Billetera no encontrada")
     
-    if wallet.balance - wallet.frozen_balance < transaction.withdraw:
+    if wallet.balance - wallet.frozen_balance < transaction.amount:
         raise HTTPException(status_code=400, detail="Fondos insuficientes")
     
-    wallet.frozen_balance += transaction.withdraw
+    wallet.frozen_balance += transaction.amount
     
     db.add(DBTransaction(
         user_id=user_id,
         wallet_id=wallet.id,
         action="withdraw",
-        amount=transaction.withdraw,
+        amount=transaction.amount,
         description="Retiro de fondos"
     ))
     db.commit()
@@ -52,7 +52,8 @@ async def confirm_withdrawal(user_id: int, db: Session = Depends(db.get_db)):
     wallet.balance -= withdrawal_amount
     wallet.frozen_balance = 0
     
-    conversion_rate = convert_to_usd("MATIC", "USD")  # Realizar la conversión con la API externa
+    conversion_rate = get_conversion_rate()
+    # convert_to_usd("MATIC", "USD")  # Realizar la conversión con la API externa
     
     withdrawed = {
         "USD": withdrawal_amount * conversion_rate,

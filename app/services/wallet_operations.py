@@ -1,12 +1,12 @@
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.database.models.user import User as DBUser
 from app.database.models.wallet import Wallet as DBWallet
 from app.database.models.transactions import Transaction as DBTransaction
 from app.utils import api_client
-from app.database.db import get_db
 
-def perform_wallet_operation(user_id: int, transaction_amount: float, action: str, db: Session = Depends(get_db)):
+
+def perform_wallet_operation(user_id: int, transaction_amount: float, action: str, db: Session):
     # Verificar la existencia del usuario en la base de usuarios externa
     if not api_client.verify_user_existence(user_id):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -19,7 +19,7 @@ def perform_wallet_operation(user_id: int, transaction_amount: float, action: st
         user_data = api_client.get_user_data_from_external_api(user_id)
 
         # Crear un nuevo usuario en la base de datos
-        user = DBUser(user_id=user_data.user_id, name=user_data.name, username=user_data.username, email=user_data.email)
+        user = DBUser(user_id=user_data["user_id"], name=user_data["name"], username=user_data["username"], email=user_data["email"])
         db.add(user)
         db.commit()
 

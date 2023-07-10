@@ -35,3 +35,6 @@ class CreditTransaction(BaseModel):
 
 class DebitTransaction(BaseModel):
     amount: float
+
+class WithdrawTransaction(BaseModel):
+    amount: float

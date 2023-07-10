@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from app.database.schemas.transactions import Transaction
 from app.database.models.transactions import Transaction as DBTransaction
 from app.database import db
 from sqlalchemy.orm import Session

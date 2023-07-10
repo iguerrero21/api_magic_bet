@@ -20,13 +20,12 @@ async def get_user_balance(user_id: int, db: Session = Depends(db.get_db)):
 
 @router.get("/api/balance/users")
 async def get_users_balance(db: Session = Depends(db.get_db)):
-    users = db.query(DBUser).options(joinedload(DBUser.wallet)).all()
-    if not users:
-        raise HTTPException(status_code=404, detail="Usuarios no encontrados")
+    wallets = db.query(DBWallet).all()
+    if not wallets:
+        raise HTTPException(status_code=404, detail="No se encontraron billeteras")
 
     users_balance = []
-    for user in users:
-        if user.wallet:
-            users_balance.append({"user_id": user.id, "balance": user.wallet.balance})
+    for wallet in wallets:
+        users_balance.append({"user_id": wallet.user_id, "balance": wallet.balance})
     
     return {"users_balance": users_balance}
